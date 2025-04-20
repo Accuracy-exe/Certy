@@ -6,7 +6,10 @@ from rich.markdown import Markdown
 from rich import print
 import os
 
-cls = lambda : os.system("cls")
+if os.name == 'nt':
+    cls = lambda : os.system("cls")
+else:
+    cls = lambda : os.system("clear")
 
 def renderMainMenu():
     cls()
