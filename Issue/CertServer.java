@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 public class CertServer {
 
   public static void main(String[] args) throws Exception {
-    int port = 8081;
+    int port = 6969;
     HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
     server.createContext("/issue", new IssueHandler());
     server.setExecutor(null);
