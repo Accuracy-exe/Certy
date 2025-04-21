@@ -52,8 +52,11 @@ def main():
                 if opt == 's':
                     cls()
                     res = requests.post("http://localhost:6969/issue", data=data)
+                    print("Status Code ", res.status_code)
                     if res.status_code == 200:
                         print(Panel(":tulip: Certy has been Issued :tulip:", style="green"))
+                        print("Press [green]ENTER[/green] to continue")
+                        input()
                     pass
 
 
