@@ -3,35 +3,39 @@ import requests
 import os
 import time as t
 from pyzbar.pyzbar import decode
-from rich.console import Console
+from rich import print
 from rich.panel import Panel
 from rich.tree import Tree
 from rich.prompt import Prompt
-from rich import box
-from rich.table import Table
 
-cls = lambda : os.system("cls")
 
-console = Console()
+if os.name == 'nt':
+    cls = lambda : os.system("cls")
+else:
+    cls = lambda : os.system("clear")
 
-VALIDATION_URL = "http://yourserver.com/validate"  # replace with your server
+menu = Tree("MENU")
+menu.add("[violet]Scan QR[/violet]")
+menu.add("[purple]Quit[/purple]")
+
+
+VALIDATION_URL = "http://localhost:8080/validate"  # replace with your server
 
 def scan_qr_code():
     cap = cv2.VideoCapture(0)
-    console.print("[bold green]Opening camera... Press 'q' to quit.[/bold green]")
+    print("[bold green]Opening camera... Press 'q' to quit.[/bold green]")
     
     qr_data = None
 
     while True:
         ret, frame = cap.read()
         if not ret:
-            console.print("[red]Failed to grab frame from camera.[/red]")
+            print("[red]Failed to grab frame from camera.[/red]")
             break
 
         decoded_objs = decode(frame)
         for obj in decoded_objs:
             qr_data = obj.data.decode("utf-8")
-            console.print(f"[yellow]QR Code detected:[/yellow] {qr_data}")
             cap.release()
             cv2.destroyAllWindows()
             return qr_data
@@ -50,32 +54,31 @@ def validate_certificate(qr_data):
         response = requests.post(VALIDATION_URL, data=qr_data)
         return response.json().get("status", "invalid")
     except Exception as e:
-        console.print(f"[red]Error contacting validation server:[/red] {e}")
+        #print(f"[red]Error contacting validation server:[/red] {e}")
         return "invalid"
 
 def show_result(status):
     if status == "valid":
-        console.print(Panel.fit("[bold white on green] VALID CERTIFICATE ✅ [/bold white on green]", box=box.DOUBLE))
+        print(Panel.fit("[bold white on green] VALID CERTIFICATE ✅ [/bold white on green]", style="green" ))
     else:
-        console.print(Panel.fit("[bold white on red] INVALID CERTIFICATE ❌ [/bold white on red]", box=box.DOUBLE))
+        print(Panel.fit("[bold white on red] INVALID CERTIFICATE ❌ [/bold white on red]", style="red"))
 
 def main():
     while True:
         cls()
-        menu = Tree("MENU")
-        menu.add("[violet]Scan QR[/violet]")
-        menu.add("[purple]Quit[/purple]")
-        console.print(Panel(menu, title="[cyan]Validation Engine[/cyan]", width=30))
+        print(Panel(menu, title="[cyan]Validation Engine[/cyan]", width=30, subtitle="Certy :tulip:", subtitle_align="right"))
         os.system("chafa ./qr_icon.png --size=30x30")
         ch = Prompt.ask("Action", choices=["scan","x"])
         if ch == 'scan':
             qr_data = scan_qr_code()
             if qr_data:
+                cls()
+                print(Panel(">> QR CODE DETECTED <<",title="[yellow]CAM[/yellow]", title_align="left", style="yellow", expand=False))
                 status = validate_certificate(qr_data)
                 show_result(status)
                 input("press ENTER to continue")
             else:
-                console.print("[red]No QR code scanned.[/red]")
+                print("[red]No QR code scanned.[/red]")
             t.sleep(1)
         if ch == 'x':
             cls()
