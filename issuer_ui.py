@@ -50,6 +50,10 @@ def main():
                 if opt == 'i':
                     data['issuer'] = Prompt.ask("Issued By",default="Certy")
                 if opt == 's':
+                    cls()
+                    res = requests.post("http://localhost:6969/issue", data=data)
+                    if res.status_code == 200:
+                        print(Panel(":tulip: Certy has been Issued :tulip:", style="green"))
                     pass
 
 
