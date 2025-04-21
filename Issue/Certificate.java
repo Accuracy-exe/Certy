@@ -53,8 +53,7 @@ public class Certificate {
 
     signedCert = certGen.generate(keyPair.getPrivate(), "BC");
 
-    Files.createDirectories(Paths.get("certificates"));
-    saveCertificateAsDER("certificates/" + who.replaceAll("\\s+", "_") + ".crt");
+    // Files.createDirectories(Paths.get("certificates"));
   }
 
   private KeyPair getOrCreateKeyPair() throws Exception {
@@ -85,7 +84,7 @@ public class Certificate {
     }
   }
 
-  public String generateReadablePDF(String outputPath) throws Exception {
+  public String generateReadablePDF() throws Exception {
     PDDocument doc = new PDDocument();
     PDPage page = new PDPage();
     doc.addPage(page);
@@ -129,6 +128,8 @@ public class Certificate {
     PDImageXObject qr = PDImageXObject.createFromFile("certificates/temp_qr.png", doc);
     content.drawImage(qr, 0, 0);
 
+    // output path is certificates/currentEpoch.pdf
+    String outputPath = "certificates/" + System.currentTimeMillis() + ".pdf";
     content.close();
     doc.save(outputPath);
     doc.close();

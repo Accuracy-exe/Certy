@@ -52,8 +52,7 @@ public class CertServer {
 
         // Generate PDF and get the path
         System.out.println("Going to create pdf");
-        String outputPath = "certificates/" + who.replaceAll("\\s+", "_") + "_Certificate.pdf";
-        cert.generateReadablePDF(outputPath);
+        String outputPath = cert.generateReadablePDF();
         System.out.println("pdf created");
 
         // Read the PDF file to return as binary
