@@ -7,7 +7,7 @@ public class CertificateIssuerTest {
       String inWhat = "Drone Design Challenge 2025";
       String who = "Team Avions";
       String fromWhere = "SAE ISS";
-      String heldAt = "Chennai";
+      String heldAt = "Bangalore";
 
       // Create the certificate
       Certificate cert = new Certificate(issuer, achievement, inWhat, who, fromWhere, heldAt);
